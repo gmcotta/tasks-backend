@@ -57,5 +57,14 @@ pipeline {
         }
       }
     }
+
+    stage ('Functional Tests') {
+      steps {
+        dir('functional-test') {
+          git credentialsId: 'login_github', url: 'https://github.com/gmcotta/tasks-functional-test'
+          bat 'mvn test'
+        }
+      }
+    }
   }
 }
