@@ -47,5 +47,15 @@ pipeline {
         }
       }
     }
+
+    stage ('Deploy Frontend') {
+      steps {
+        dir('frontend') {
+          git credentialsId: 'login_github', url: 'https://github.com/gmcotta/tasks-frontend'
+          bat 'mvn clean package -DskipTests=true'
+          deploy adapters: [tomcat8(credentialsId: 'tomcat_login', path: '', url: 'http://localhost:8001/')], contextPath: 'tasks', war: 'target/tasks.war'
+        }
+      }
+    }
   }
 }
