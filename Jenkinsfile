@@ -73,5 +73,14 @@ pipeline {
         bat 'wsl docker-compose up -d'
       }
     }
+
+    stage('Health Check') {
+      steps {
+        sleep(40)
+        dir('functional-test') {
+          bat 'mvn verify -Dskip.surefile.tests'
+        }
+      }
+    }
   }
 }
