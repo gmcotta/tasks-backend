@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage ('Build Backend') {
       steps {
-        bat 'mvn clean package -DskipTests=true'
+        bat 'mvnn clean package -DskipTests=true'
       }
     }
 
@@ -86,7 +86,13 @@ pipeline {
 
   post {
     always {
-      junit allowEmptyResults: true, testResults: 'target/surefile-reports/*.xml,api-test/target/surefile-reports/*.xml,functional-test/target/surefile-reports/*.xml,functional-test/target/failsafe-reports/*.xml'
+      junit allowEmptyResults: true, testResults: 'target/surefile-reports/*.xml, api-test/target/surefile-reports/*.xml, functional-test/target/surefile-reports/*.xml, functional-test/target/failsafe-reports/*.xml'
+    }
+    unsuccessful {
+      emailext attachLog: true, body: 'See the attached log below.', subject: 'Build $BUILD_NUMBER has failed', to: 'gmcotta34+jenkins@gmail.com'
+    }
+    fixed {
+      emailext attachLog: true, body: 'See the attached log below.', subject: 'Build $BUILD_NUMBER is completed successfully', to: 'gmcotta34+jenkins@gmail.com'
     }
   }
 }
